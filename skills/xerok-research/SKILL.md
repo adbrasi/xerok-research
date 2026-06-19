@@ -40,7 +40,17 @@ volume — are what make the report trustworthy.
 Bundled assets (read on demand, not all upfront):
 `references/output-contract.md` (the report spec), `references/specialists.md`
 (role prompts to paste into dispatches), `scripts/xerok.py` (the deterministic
-engine). `SCRIPT = ${CLAUDE_SKILL_DIR}/scripts/xerok.py`.
+engine, stdlib-only).
+
+**Engine command (`$SCRIPT`), portable across runtimes.** Resolve it once per run,
+in this order — the orchestrator RUNS these as shell commands (they are not
+auto-executed at load):
+- If `xerok` is on `PATH` (installed by `install.sh`): `SCRIPT="xerok"`.
+- Else on Claude Code: `SCRIPT="python3 ${CLAUDE_SKILL_DIR}/scripts/xerok.py"`.
+- Else (Codex/Antigravity/Gemini, no skill-dir var): the script sits next to this
+  SKILL.md — `SCRIPT="python3 <this-skill-dir>/scripts/xerok.py"` (find it under
+  `~/.agents/skills/xerok-research`, `~/.codex/skills/...`, `~/.gemini/skills/...`,
+  or `~/.claude/skills/...`).
 
 ## Typed state & memory bank
 
@@ -66,8 +76,8 @@ xerok-runs/<id>/
 
 1. Decide **depth** (default `quick`; `standard`/`deep` if the user signals it or
    the question is broad). Detect the **answer language** from the question.
-2. Create the run: `!`python3 $SCRIPT init "<question>" --depth <depth> --lang <lang>`` →
-   capture the printed `RUN_DIR`.
+2. Create the run: run `$SCRIPT init "<question>" --depth <depth> --lang <lang>`
+   and capture the printed `RUN_DIR`.
 3. Build the **typed plan**. For `standard`/`deep`, dispatch the **architect**
    (opus) from `references/specialists.md`; for `quick`, do it inline. Result
    (written into `state.json`): `sub_questions` (5–12, MECE, in answer order),
@@ -88,9 +98,9 @@ xerok-runs/<id>/
 2. Each lane writes `evidence/<lane>.jsonl` and returns a short manifest only
    (counts, top findings, gaps, conflicts) — keep their raw dumps out of your
    context.
-3. Aggregate deterministically:
-   `!`python3 $SCRIPT merge-evidence <RUN_DIR>`` → dedups, scores source primacy
-   (flags homepages/social), writes `bank.jsonl`, and reports **coverage + gaps**.
+3. Aggregate deterministically: run `$SCRIPT merge-evidence <RUN_DIR>` → dedups,
+   scores source primacy (flags homepages/social), writes `bank.jsonl`, and
+   reports **coverage + gaps**.
 4. **Evidence-sufficiency gate.** If `coverage.json` shows gaps (sub-questions
    with `< min-evidence`) or too many non-primary sources, dispatch 1–2 targeted
    **gap-fill** searches (reuse the evidence/critic role with the missing
@@ -120,16 +130,16 @@ xerok-runs/<id>/
    tells. Citations stay intact.
 2. **readability_rewrite** (opus): final flow pass, no new facts, no dropped
    citations, language stays locked.
-3. **Deterministic post-pass** (NO LLM, idempotent, fail-soft):
-   `!`python3 $SCRIPT postpass <RUN_DIR>/report.md`` → renumber/dedup citations,
-   rebuild the Sources block, clamp em-dashes, despace CJK, normalize whitespace,
-   flag long paragraphs.
-4. **Validate against the plan:**
-   `!`python3 $SCRIPT validate <RUN_DIR> <RUN_DIR>/report.md`` → checks citations
-   resolve, primary-source ratio ≥0.7, Limitations present, every sub-question
-   covered, numeric_spine present, acceptance criteria met. On failure, do one
-   targeted fix round (more evidence or a section rewrite), then re-postpass +
-   re-validate. `!`python3 $SCRIPT metrics <RUN_DIR>/report.md`` for the summary.
+3. **Deterministic post-pass** (NO LLM, idempotent, fail-soft): run
+   `$SCRIPT postpass <RUN_DIR>/report.md` → renumber/dedup citations, rebuild the
+   Sources block, clamp em-dashes, despace CJK, normalize whitespace, flag long
+   paragraphs.
+4. **Validate against the plan:** run `$SCRIPT validate <RUN_DIR> <RUN_DIR>/report.md`
+   → checks citations resolve, primary-source ratio ≥0.7, Limitations present,
+   every sub-question covered, numeric_spine present, acceptance criteria met. On
+   failure, do one targeted fix round (more evidence or a section rewrite), then
+   re-postpass + re-validate. Run `$SCRIPT metrics <RUN_DIR>/report.md` for the
+   summary.
 5. Deliver `report.md` to the user as the **cited final report**. Tell them the
    run dir, depth, source count, and any residual gaps the validator flagged.
 

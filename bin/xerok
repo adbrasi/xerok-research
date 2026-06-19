@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# XEROK RESEARCH engine launcher — runtime-agnostic.
+# Locates scripts/xerok.py wherever the skill was installed and execs it, so any
+# agent (Claude Code / Codex / Antigravity / Gemini CLI) can just call `xerok ...`.
+set -euo pipefail
+
+self="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")" && pwd)"
+
+candidates=(
+  "${XEROK_HOME:-}"
+  "${XEROK_HOME:-}/scripts"
+  "$HOME/.agents/skills/xerok-research"
+  "$HOME/.claude/skills/xerok-research"
+  "${CODEX_HOME:-$HOME/.codex}/skills/xerok-research"
+  "$HOME/.gemini/skills/xerok-research"
+  "$HOME/.antigravity/skills/xerok-research"
+  "$self/.."                                   # repo: bin/.. -> repo root
+  "$self/../skills/xerok-research"             # repo layout
+)
+
+for d in "${candidates[@]}"; do
+  [ -n "$d" ] || continue
+  if [ -f "$d/scripts/xerok.py" ]; then
+    exec python3 "$d/scripts/xerok.py" "$@"
+  fi
+  if [ -f "$d/xerok.py" ]; then
+    exec python3 "$d/xerok.py" "$@"
+  fi
+done
+
+echo "xerok: could not locate scripts/xerok.py. Set XEROK_HOME to the skill dir." >&2
+exit 1
