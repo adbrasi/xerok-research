@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+node_modules/
+dist/
+build/
+.vscode/
+
+# XEROK RESEARCH run artifacts (evidence, drafts, reports)
+xerok-runs/
+*.bak

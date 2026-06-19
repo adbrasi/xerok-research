@@ -1,0 +1,18 @@
+{
+  "name": "xerok-research",
+  "displayName": "XEROK RESEARCH",
+  "version": "0.1.0",
+  "description": "Advanced four-stage deep-research engine (Plan -> Research -> Write -> Edit) that orchestrates parallel opus/sonnet sub-agents and a deterministic post-pass to turn one question into a primary-source-cited report.",
+  "author": {
+    "name": "Argus Paragon Studios"
+  },
+  "keywords": [
+    "deep-research",
+    "research",
+    "citations",
+    "orchestration",
+    "subagents",
+    "benchmarks"
+  ],
+  "skills": "./skills/"
+}
