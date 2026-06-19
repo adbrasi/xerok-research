@@ -13,6 +13,7 @@ candidates=(
   "$HOME/.claude/skills/xerok-research"
   "${CODEX_HOME:-$HOME/.codex}/skills/xerok-research"
   "$HOME/.gemini/skills/xerok-research"
+  "$HOME/.gemini/antigravity-cli/skills/xerok-research"
   "$HOME/.antigravity/skills/xerok-research"
   "$self/.."                                   # repo: bin/.. -> repo root
   "$self/../skills/xerok-research"             # repo layout

@@ -55,31 +55,53 @@ docs/TECHNICAL_BRIEFING.md          # Claude Code skills/plugins/subagents refer
 
 ## Install
 
-Skill-directory plugin (auto-loaded, no marketplace):
+Clone and run the installer. It detects nothing — you pick the tools.
 
 ```bash
-ln -s "$(pwd)" ~/.claude/skills/xerok-research      # or copy the folder
+git clone https://github.com/<you>/xerok-research.git
+cd xerok-research
+./install.sh                      # all tools, global (~/)
+./install.sh --claude --codex     # only some tools
+./install.sh --agy --local        # into the current project ($PWD)
+./install.sh --uninstall --all    # remove
 ```
 
-Or run Claude Code with the plugin dir directly:
+`./install.sh --help` lists every flag. It copies the skill into each tool's
+skills directory and installs a runtime-agnostic `xerok` launcher into
+`~/.local/bin` (so any agent can call `xerok <subcommand>`).
+
+### Where it installs (skill = a folder with `SKILL.md`)
+
+| Tool | `--global` (default) | `--local` (project) |
+|------|----------------------|---------------------|
+| **Claude Code** (`--claude`) | `~/.claude/skills/xerok-research` | `./.claude/skills/…` |
+| **Codex CLI** (`--codex`) | `~/.agents/skills/xerok-research` | `./.codex/skills/…` (+ `./.agents/skills/…`) |
+| **Antigravity `agy` + Gemini CLI** (`--agy`) | `~/.gemini/skills/…` + `~/.gemini/antigravity-cli/skills/…` | `./.agents/skills/…` |
+
+Notes: Claude Code does **not** read `~/.agents/skills`; Codex's `~/.agents/skills`
+is its canonical path (also read by Gemini CLI); `agy` reads `~/.gemini/skills`
+(global) and per-project `.agents/skills`. Codex needs `multi_agent = true` in
+`~/.codex/config.toml` for parallel sub-agents (it is the default).
+
+### Invoke
+
+- **Claude Code**: `/xerok-research`, or just ask for "deep research on …".
+- **Codex CLI**: skills load natively — `$xerok-research` or ask for deep research.
+- **agy / Gemini CLI**: the skill name surfaces at session start; `agy` reads its
+  `SKILL.md`, Gemini CLI uses `activate_skill`.
+
+## Use the engine directly (no agent needed)
+
+The deterministic engine is a standalone CLI (`xerok` after install, or
+`python3 skills/xerok-research/scripts/xerok.py`):
 
 ```bash
-claude --plugin-dir /home/adolfocesar/projects/deep_research
-```
-
-Then invoke with `/xerok-research:xerok-research` (or just ask for "deep research
-on …" and let Claude pick it up).
-
-## Use the engine directly
-
-```bash
-SCRIPT=skills/xerok-research/scripts/xerok.py
-RUN=$(python3 $SCRIPT init "your question" --depth deep)   # -> run dir
+RUN=$(xerok init "your question" --depth deep)   # -> prints the run dir
 #   ... sub-agents fill $RUN/evidence/<lane>.jsonl ...
-python3 $SCRIPT merge-evidence "$RUN"                       # dedup + coverage
-python3 $SCRIPT postpass  "$RUN/report.md"                  # deterministic cleanup
-python3 $SCRIPT metrics   "$RUN/report.md"                  # article metrics
-python3 $SCRIPT validate  "$RUN" "$RUN/report.md"           # check vs the plan
+xerok merge-evidence "$RUN"                        # dedup + source scoring + coverage
+xerok postpass  "$RUN/report.md"                   # deterministic cleanup (idempotent)
+xerok metrics   "$RUN/report.md"                   # article metrics
+xerok validate  "$RUN" "$RUN/report.md"            # check vs the plan
 ```
 
 Requires Python 3.8+ (standard library only — no dependencies).
