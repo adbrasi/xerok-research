@@ -55,20 +55,28 @@ docs/TECHNICAL_BRIEFING.md          # Claude Code skills/plugins/subagents refer
 
 ## Install
 
-Clone and run the installer. It detects nothing — you pick the tools.
+Pick your tools — you choose, nothing is auto-detected. No clone needed (runs
+straight from GitHub):
+
+```bash
+npx github:adbrasi/xerok-research                  # all tools, global (~/)
+npx github:adbrasi/xerok-research --claude --codex  # only some tools
+npx github:adbrasi/xerok-research --agy --local     # into the current project
+npx github:adbrasi/xerok-research --uninstall --all # remove
+```
+
+No Node? Clone and use the bash installer — identical flags, zero dependencies:
 
 ```bash
 git clone https://github.com/adbrasi/xerok-research.git
 cd xerok-research
-./install.sh                      # all tools, global (~/)
-./install.sh --claude --codex     # only some tools
-./install.sh --agy --local        # into the current project ($PWD)
-./install.sh --uninstall --all    # remove
+./install.sh --all          # or --claude / --codex / --agy, --local, --uninstall
 ```
 
-`./install.sh --help` lists every flag. It copies the skill into each tool's
-skills directory and installs a runtime-agnostic `xerok` launcher into
-`~/.local/bin` (so any agent can call `xerok <subcommand>`).
+Add `--help` to either. Both copy the skill into each tool's skills directory and
+install a runtime-agnostic `xerok` launcher into `~/.local/bin` (so any agent can
+call `xerok <subcommand>`). The skill itself is Node-free — npx is only the
+delivery mechanism; at runtime it's markdown + a stdlib Python engine.
 
 ### Where it installs (skill = a folder with `SKILL.md`)
 

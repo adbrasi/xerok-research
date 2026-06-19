@@ -1,0 +1,30 @@
+{
+  "name": "xerok-research",
+  "version": "0.1.0",
+  "description": "XEROK RESEARCH — portable 4-stage deep-research skill (Plan→Research→Write→Edit) for Claude Code, Codex CLI and Antigravity/Gemini CLI. Installer only; the skill itself is markdown + a stdlib Python engine.",
+  "bin": {
+    "xerok-research": "bin/install.js"
+  },
+  "files": [
+    "skills/",
+    "bin/",
+    "install.sh",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=16.7"
+  },
+  "keywords": [
+    "deep-research",
+    "agent-skill",
+    "claude-code",
+    "codex",
+    "antigravity",
+    "gemini-cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adbrasi/xerok-research.git"
+  },
+  "license": "MIT"
+}
