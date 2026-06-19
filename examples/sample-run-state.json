@@ -1,0 +1,52 @@
+{
+  "question": "Melhores GPUs para uso diario de LTX 2.x e WAN (video); melhores precos e servicos de aluguel (RunPod/Vast/Novita); serverless (Salad/Modal/Beam) vs por hora; gerar 10 min de video com LTX 2.3; otimizacoes ComfyUI (SageAttention, Nunchaku, quantizacoes)",
+  "language": "pt",
+  "depth": "deep",
+  "created": "20260618-235808",
+  "sub_questions": [
+    "Quais GPUs tem melhor custo-beneficio para uso diario de LTX 2.x e WAN (VRAM, velocidade, specs)",
+    "Melhores precos e servicos de aluguel por hora (RunPod, Vast.ai, Novita, etc) e a placa custo-beneficio em cada um",
+    "Serverless comparado (Salad vs Modal vs Beam vs RunPod Serverless vs Replicate/Fal): forcas e quando cada um vence",
+    "Serverless vs aluguel por hora/spot: qual melhor caso de uso para geracao de video",
+    "Caminho recomendado para gerar 10 minutos de video com LTX 2.3: serverless ou spot, qual servico e qual placa para max velocidade e melhor preco",
+    "Otimizacoes de velocidade recentes em workflows ComfyUI: SageAttention, Nunchaku, quantizacoes sem perda (FP8, NVFP4, GGUF) com benchmarks",
+    "Patches e melhorias recentes e benchmarks dos modelos LTX 2.x e WAN (frontier)"
+  ],
+  "acceptance_criteria": [
+    "RunPod",
+    "Vast",
+    "ComfyUI",
+    "SageAttention",
+    "LTX",
+    "WAN",
+    "serverless",
+    "Nunchaku"
+  ],
+  "numeric_spine": [
+    "VRAM",
+    "GB",
+    "ComfyUI"
+  ],
+  "research_queries": [
+    "LTX-Video 2.0 2.3 GPU requirements VRAM benchmark 2026",
+    "WAN 2.x video model ComfyUI VRAM requirements benchmark",
+    "RunPod GPU pricing RTX 4090 5090 A100 H100 per hour spot 2026",
+    "Vast.ai GPU rental price RTX 4090 5090 H100 2026",
+    "Novita AI GPU cloud pricing 2026",
+    "Salad GPU cloud serverless price RTX 4090 2026",
+    "Modal serverless GPU pricing H100 A100 per second 2026",
+    "Beam cloud serverless GPU pricing 2026",
+    "Replicate Fal.ai serverless video generation pricing 2026",
+    "RunPod serverless vs pod hourly cost comparison video generation",
+    "SageAttention 2 speedup benchmark ComfyUI video diffusion",
+    "Nunchaku SVDQuant FP4 ComfyUI speedup quality benchmark 2026",
+    "FP8 NVFP4 GGUF quantization video model quality loss benchmark",
+    "ComfyUI LTX-Video workflow optimization speed 2026",
+    "RTX 5090 vs 4090 vs H100 video diffusion generation speed benchmark",
+    "best GPU price performance AI video generation 2026 24GB 48GB",
+    "LTX 2.3 generate long video 10 minutes time cost GPU",
+    "torch.compile sageattention ComfyUI video speedup",
+    "WAN 2.2 2.5 release notes speed improvements 2026",
+    "spot interruptible GPU video rendering reliability RunPod Vast"
+  ]
+}

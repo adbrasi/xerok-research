@@ -305,28 +305,41 @@ def op_normalize_citations(text: str):
 
 def op_clamp_emdash(text: str, budget_per_1000w: float):
     """Reduce em-dash density (an AI-writing tell) below a budget by converting
-    surplus ' — ' to ', '. Conservative: leaves dashes inside code spans alone."""
+    surplus ' - ' to ', '. Keeps the first `allowed` dashes. Skips table rows,
+    headings, blockquotes, and fenced/inline code (where ' - ' is a cell marker
+    or syntax, not prose)."""
     words = max(1, len(re.findall(r"\b\w+\b", text)))
     allowed = int(budget_per_1000w * words / 1000)
-    # protect inline code
-    codes = []
-    def _stash(m):
-        codes.append(m.group(0))
-        return f"\x00{len(codes)-1}\x00"
-    protected = re.sub(r"`[^`]*`", _stash, text)
-    positions = [m.start() for m in re.finditer(r"\s—\s|\s–\s", protected)]
-    surplus = max(0, len(positions) - allowed)
-    if surplus > 0:
-        count = {"n": 0}
+    state = {"budget": allowed, "removed": 0}
+    in_code = False
+    out = []
+    for ln in text.split("\n"):
+        if ln.strip().startswith("```"):
+            in_code = not in_code
+            out.append(ln)
+            continue
+        s = ln.lstrip()
+        if in_code or s.startswith(("|", "#", ">")):
+            out.append(ln)
+            continue
+        codes = []
+        def _stash(m):
+            codes.append(m.group(0))
+            return f"\x00{len(codes) - 1}\x00"
+        prot = re.sub(r"`[^`]*`", _stash, ln)
+
         def _rep(m):
-            if count["n"] < surplus:
-                count["n"] += 1
-                return ", "
-            return m.group(0)
-        protected = re.sub(r"\s—\s|\s–\s", _rep, protected)
-    for i, c in enumerate(codes):
-        protected = protected.replace(f"\x00{i}\x00", c)
-    return protected, {"changed": protected != text, "emdash_removed": surplus, "emdash_budget": allowed}
+            if state["budget"] > 0:
+                state["budget"] -= 1
+                return m.group(0)
+            state["removed"] += 1
+            return ", "
+        prot = re.sub(r"\s—\s|\s–\s", _rep, prot)
+        for i, c in enumerate(codes):
+            prot = prot.replace(f"\x00{i}\x00", c)
+        out.append(prot)
+    result = "\n".join(out)
+    return result, {"changed": result != text, "emdash_removed": state["removed"], "emdash_budget": allowed}
 
 
 def op_cjk_despace(text: str):
@@ -469,7 +482,9 @@ def cmd_validate(args):
 
     # 3. limitations / caveats section present
     add("limitations_section",
-        bool(re.search(r"(?im)^#{1,6}.*(limitation|caveat|局限|不确定)", text)),
+        bool(re.search(
+            r"(?im)^#{1,6}.*(limitation|limitaç|limitacion|caveat|ressalva|"
+            r"advertenc|局限|不确定|注意事项)", text)),
         "")
 
     # 4. each sub-question addressed (key-term match)

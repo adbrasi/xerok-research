@@ -1,0 +1,67 @@
+{
+  "run_dir": "/home/adolfocesar/projects/deep_research/xerok-runs/20260618-235808",
+  "lanes": [
+    "comparator",
+    "critic",
+    "evidence",
+    "horizon",
+    "mechanism"
+  ],
+  "evidence_total_raw": 92,
+  "evidence_total_deduped": 92,
+  "duplicates_removed": 0,
+  "unique_sources": 67,
+  "non_primary_evidence": 1,
+  "non_primary_examples": [
+    {
+      "url": "https://x.com/ArtificialAnlys/status/1977910656566489143",
+      "reason": "aggregator-or-social"
+    }
+  ],
+  "coverage": [
+    {
+      "sub_question": 1,
+      "text": "Quais GPUs tem melhor custo-beneficio para uso diario de LTX 2.x e WAN (VRAM, velocidade, specs)",
+      "evidence_count": 20,
+      "gap": false
+    },
+    {
+      "sub_question": 2,
+      "text": "Melhores precos e servicos de aluguel por hora (RunPod, Vast.ai, Novita, etc) e a placa custo-beneficio em cada um",
+      "evidence_count": 19,
+      "gap": false
+    },
+    {
+      "sub_question": 3,
+      "text": "Serverless comparado (Salad vs Modal vs Beam vs RunPod Serverless vs Replicate/Fal): forcas e quando cada um vence",
+      "evidence_count": 17,
+      "gap": false
+    },
+    {
+      "sub_question": 4,
+      "text": "Serverless vs aluguel por hora/spot: qual melhor caso de uso para geracao de video",
+      "evidence_count": 16,
+      "gap": false
+    },
+    {
+      "sub_question": 5,
+      "text": "Caminho recomendado para gerar 10 minutos de video com LTX 2.3: serverless ou spot, qual servico e qual placa para max velocidade e melhor preco",
+      "evidence_count": 38,
+      "gap": false
+    },
+    {
+      "sub_question": 6,
+      "text": "Otimizacoes de velocidade recentes em workflows ComfyUI: SageAttention, Nunchaku, quantizacoes sem perda (FP8, NVFP4, GGUF) com benchmarks",
+      "evidence_count": 25,
+      "gap": false
+    },
+    {
+      "sub_question": 7,
+      "text": "Patches e melhorias recentes e benchmarks dos modelos LTX 2.x e WAN (frontier)",
+      "evidence_count": 11,
+      "gap": false
+    }
+  ],
+  "gaps": [],
+  "bank": "/home/adolfocesar/projects/deep_research/xerok-runs/20260618-235808/evidence/bank.jsonl"
+}
