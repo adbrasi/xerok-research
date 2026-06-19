@@ -58,7 +58,7 @@ docs/TECHNICAL_BRIEFING.md          # Claude Code skills/plugins/subagents refer
 Clone and run the installer. It detects nothing — you pick the tools.
 
 ```bash
-git clone https://github.com/<you>/xerok-research.git
+git clone https://github.com/adbrasi/xerok-research.git
 cd xerok-research
 ./install.sh                      # all tools, global (~/)
 ./install.sh --claude --codex     # only some tools
